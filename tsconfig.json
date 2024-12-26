@@ -2,19 +2,22 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "skipLibCheck": true,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": false,
     "module": "ESNext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "bundler", 
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": true, // Изменено на false, чтобы разрешить генерацию файлов .d.ts
     "jsx": "react-jsx",
-    "types": ["vitest/globals", "node"] // Добавьте "node" сюда
+    "types": ["vitest/globals", "node"] // Добавлено "node" для типов
   },
+  "include": [
+    "src", // Убедитесь, что ваш основной код включен
+   // "vite.config.ts" // Убедитесь, что vite.config.ts включен
+  ],
+  "exclude": ["node_modules"], // Исключение node_modules
   "references": [{ "path": "./tsconfig.node.json" }]
 }

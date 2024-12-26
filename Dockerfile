@@ -1,11 +1,11 @@
 # Указываем базовый образ с Node.js
-FROM node:23-alpline3.20 AS builder
+FROM node:23-alpine3.20 AS builder
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
 # Копируем package.json и package-lock.json (или yarn.lock)
-COPY package*.json ./
+COPY package.json ./
 
 # Устанавливаем зависимости
 RUN npm install
