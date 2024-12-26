@@ -35,7 +35,6 @@ const App = () => {
       };
       fetchData();
     }
-    console.log(process.env.REACT_APP_GEMINI_KEY1);
     
   }, [dispatch, forecast, doc1, doc2, doc3]);
  
@@ -51,6 +50,7 @@ const App = () => {
         <Route path="/gemini" element={auth ? <GeminiCopmonent /> : <Home2 />} />
         <Route path="/solar-data" element={<Test />} />
         <Route path="/test" element={<SolarForecast />} />
+        <Route path="/k_index" element={<SolarForecast />} />
       </Routes>
       <Footer />
     </div>

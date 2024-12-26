@@ -18,8 +18,7 @@ export const fetchGemini = async (text: string): Promise<string> => {
     });
 
     try {
-        /*const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.REACT_APP_GEMINI_KEY}`, raw, { headers: myHeaders });*/
-        const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAXkWOLA8X_5sWPTuLSFbQaoAdbJ3BwUxk`, raw, { headers: myHeaders });
+        const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${import.meta.env.VITE_REACT_APP_GEMINI_KEY}`, raw, { headers: myHeaders });
         
         // Предполагаем, что ответ приходит в нужном формате
         const textResponse = response.data.candidates[0].content.parts[0].text;

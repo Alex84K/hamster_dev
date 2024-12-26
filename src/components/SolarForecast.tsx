@@ -6,6 +6,8 @@ const SolarForecast = () => {
     const [data1, setData] = useState<string[][]>([]); // Initialize as empty array
 
     const fetchDataSolar = () => {
+        //https://services.swpc.noaa.gov/json/boulder_k_index_1m.json
+        //https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json
         fetch("https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json")
             .then((response) => response.json())
             .then((result) => setData(result))
@@ -38,12 +40,12 @@ const SolarForecast = () => {
     }, [data1]); // Run this effect when data1 changes
 
     return (
-        <Container>
-            <Typography variant="h4" gutterBottom>
+        <Container className='bg-white'>
+            <Typography variant="h4" gutterBottom className='pt-4'>
                 Kp Index Chart
             </Typography>
             <LineChart
-                xAxis={[{ data: fooArr1 }]}
+                xAxis={[{ data: fooArr1,  }]}
                 series={[{ data: fooArr }]}
                 width={800}
                 height={400}

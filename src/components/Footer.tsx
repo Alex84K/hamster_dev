@@ -1,6 +1,7 @@
-import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Footer = () => {
+  const navigate = useNavigate()
   return (
     <footer className="site-footer">
     <div className="container">
@@ -14,7 +15,7 @@ const Footer = () => {
           <h6>Projects</h6>
           <ul className="footer-links">
             <li><a href="http://82.165.47.33:3000/">Amortisationsrechner</a></li>
-            <li><a href="http://scanfcode.com/category/front-end-development/">UI Design</a></li>
+            <li><a onClick={() => navigate('/k_index')}>K_index</a></li>
             <li><a href="http://scanfcode.com/category/back-end-development/">PHP</a></li>
             <li><a href="http://scanfcode.com/category/java-programming-language/">Java</a></li>
             <li><a href="http://scanfcode.com/category/android/">Android</a></li>
