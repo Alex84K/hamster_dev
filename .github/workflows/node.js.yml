@@ -32,11 +32,12 @@ jobs:
       - name: Save Docker image
         run: |
           docker save $DOCKER_IMAGE -o $DOCKER_IMAGE.tar
-          ls -lh  # Проверим, что файл создан
+          ls -lh  # Выводим список файлов после сохранения образа
 
       - name: List files before upload
         run: |
-          ls -lh  # Проверим, что файл .tar существует в рабочей директории
+          echo "Current directory contents:"
+          ls -lh  # Проверяем, что файл .tar существует в рабочей директории
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -58,7 +59,8 @@ jobs:
 
       - name: List downloaded files
         run: |
-          ls -lh
+          echo "List of downloaded files:"
+          ls -lh  # Проверяем, что файлы загружены правильно
 
       - name: Set up SSH
         run: |
