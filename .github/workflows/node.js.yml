@@ -81,12 +81,12 @@ jobs:
 
       - name: Copy files to remote server
         run: |
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key $DOCKER_IMAGE.tar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key $DOCKER_IMAGE.tar root@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key docker-compose.yml root@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
 
       - name: Deploy Docker image on remote server
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key root@${{ secrets.SERVER_IP }} "
             cd $DEPLOY_DIR &&
             docker stop $CONTAINER_NAME || true &&
             docker rm $CONTAINER_NAME || true &&
