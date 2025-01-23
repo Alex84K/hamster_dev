@@ -81,5 +81,5 @@ jobs:
             docker stop $CONTAINER_NAME || true &&
             docker rm $CONTAINER_NAME || true &&
             docker load -i hamster_dev.tar &&
-            docker-compose up -d
+            docker run -d -p '$HOST_PORT':'$CONTAINER_PORT' --name '$CONTAINER_NAME' '$DOCKER_IMAGE'
           "
