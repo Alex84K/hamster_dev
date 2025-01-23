@@ -50,6 +50,10 @@ jobs:
           docker save $DOCKER_IMAGE -o $DOCKER_IMAGE.tar
           ls -lh
 
+      - name: List files before upload
+        run: |
+          ls -lh
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -70,7 +74,7 @@ jobs:
 
       - name: List downloaded files
         run: |
-          ls -la
+          ls -lh
 
       - name: Set up SSH
         run: |
