@@ -31,21 +31,21 @@ jobs:
 
       - name: Save Docker image
         run: |
-          docker save $DOCKER_IMAGE -o $DOCKER_IMAGE.tar
-          ls -lh  # Выводим список файлов после сохранения образа
+          docker save $DOCKER_IMAGE -o hamster_dev.tar
+          ls -lh  # Проверяем, что файл был сохранен в рабочей директории
 
       - name: List files before upload
         run: |
-          echo "Current directory contents:"
-          ls -lh  # Проверяем, что файл .tar существует в рабочей директории
+          echo "Listing current directory contents:"
+          ls -lh  # Выводим все файлы в рабочей директории
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: deployment-files
           path: |
-            ./hamster_dev.tar  # Явно указываем путь к файлу
-            ./docker-compose.yml  # Убедитесь, что файл находится в корне репозитория
+            hamster_dev.tar  # Убедитесь, что файл hamster_dev.tar существует в текущей директории
+            docker-compose.yml  # Убедитесь, что файл docker-compose.yml находится в корне репозитория
 
   deploy:
     runs-on: ubuntu-latest
@@ -59,8 +59,8 @@ jobs:
 
       - name: List downloaded files
         run: |
-          echo "List of downloaded files:"
-          ls -lh  # Проверяем, что файлы загружены правильно
+          echo "Listing downloaded files:"
+          ls -lh  # Проверяем, что файлы успешно загружены
 
       - name: Set up SSH
         run: |
