@@ -75,31 +75,21 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github_ci_cd_key
+          chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "${{ secrets.SERVER_IP }}" >> ~/.ssh/known_hosts
-
-      - name: Create deploy directory on remote server
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-
-      - name: Check for required files
-        run: |
-          if [ ! -f "$DOCKER_IMAGE.tar" ]; then
-            echo "Error: $DOCKER_IMAGE.tar not found!"
-            exit 1
-          fi
-          if [ ! -f "docker-compose.yml" ]; then
-            echo "Error: docker-compose.yml not found!"
-            exit 1
-          fi
 
       - name: Copy files to remote server
         run: |
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 $DOCKER_IMAGE.tar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key $DOCKER_IMAGE.tar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
 
       - name: Deploy Docker image on remote server
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-            cd $DEPLOY_DIR 
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+            cd $DEPLOY_DIR &&
+            docker stop $CONTAINER_NAME || true &&
+            docker rm $CONTAINER_NAME || true &&
+            docker load -i $DOCKER_IMAGE.tar &&
+            docker run -d -p $HOST_PORT:$CONTAINER_PORT --name $CONTAINER_NAME $DOCKER_IMAGE
+          "
