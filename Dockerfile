@@ -28,7 +28,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Указываем порт, который будет слушать nginx
-EXPOSE 3005
+EXPOSE 3003
 
 # Запускаем nginx
 CMD ["nginx", "-g", "daemon off;"]
