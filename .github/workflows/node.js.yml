@@ -8,7 +8,7 @@ on:
 
 env:
   DOCKER_IMAGE: "hamster_dev"
-  DEPLOY_DIR: "/root/deploy/"  # Убедитесь, что путь корректен
+  DEPLOY_DIR: "/root/deploy/"
   CONTAINER_NAME: "hamster_dev"
   HOST_PORT: "3003"
   CONTAINER_PORT: "3003"
@@ -19,44 +19,37 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [20.x]  # Используйте стабильную версию Node.js
 
     steps:
-      # Шаг 1: Получение кода из репозитория
       - uses: actions/checkout@v4
 
-      # Шаг 2: Проверка содержимого рабочей директории
-      - name: List files in the working directory
+      - name: Clean and reinstall dependencies
         run: |
-          ls -la  # Вывод списка файлов для отладки
-      # Шаг 3: Установка Node.js
+          rm -rf node_modules package-lock.json
+          npm install --legacy-peer-deps
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      # Шаг 4: Установка зависимостей
-      - run: npm ci
-
-      # Шаг 5: Сборка проекта
       - run: npm run build --if-present
 
-      # Шаг 6: Установка Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # Шаг 7: Сборка Docker-образа
       - name: Build Docker image
         run: |
           docker build -t $DOCKER_IMAGE .
-          docker images  # Проверка, что образ создан
-      # Шаг 8: Сохранение Docker-образа в tar-файл
+          docker images
+
       - name: Save Docker image
         run: |
           docker save $DOCKER_IMAGE -o $DOCKER_IMAGE.tar
-          ls -lh  # Проверка наличия файла
-      # Шаг 9: Загрузка Docker-образа и docker-compose.yml как артефактов
+          ls -lh
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -64,29 +57,28 @@ jobs:
           path: |
             ${{ env.DOCKER_IMAGE }}.tar
             docker-compose.yml
+
   deploy-to-server:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      # Шаг 1: Загрузка артефактов
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           name: deployment-files
           path: .
 
-      # Шаг 2: Проверка содержимого рабочей директории
       - name: List downloaded files
         run: |
-          ls -la  # Вывод списка файлов для отладки
-      # Шаг 3: Настройка SSH
+          ls -la
+
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "${{ secrets.SERVER_IP }}" >> ~/.ssh/known_hosts
-      # Шаг 4: Создание директории на удаленном сервере
+
       - name: Create deploy directory on remote server
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
@@ -94,7 +86,7 @@ jobs:
             echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S chown ${{ secrets.SERVER_USER }}:${{ secrets.SERVER_USER }} $DEPLOY_DIR &&
             echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S chmod 777 $DEPLOY_DIR
           "
-      # Шаг 5: Проверка наличия файлов перед копированием
+
       - name: Check for required files
         run: |
           if [ ! -f "$DOCKER_IMAGE.tar" ]; then
@@ -105,17 +97,17 @@ jobs:
             echo "Error: docker-compose.yml not found!"
             exit 1
           fi
-      # Шаг 6: Копирование файлов на удаленный сервер
+
       - name: Copy files to remote server
         run: |
           scp -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 $DOCKER_IMAGE.tar ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
           scp -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 docker-compose.yml ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
-      # Шаг 7: Развертывание на удаленном сервере
+
       - name: Deploy Docker image on remote server
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
             cd $DEPLOY_DIR &&
-            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S docker load -i $DOCKER_IMAGE.tar &&  # Загрузка Docker-образа
-            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S docker compose down &&  # Остановка и удаление старых контейнеров
-            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S docker compose up -d  # Запуск новых контейнеров
+            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S docker load -i $DOCKER_IMAGE.tar &&
+            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S docker compose down &&
+            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S docker compose up -d
           "
