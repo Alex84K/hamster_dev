@@ -76,7 +76,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github_ci_cd_key
-          chmod 600 ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/github_ci_cd_key
           ssh-keyscan -H "${{ secrets.SERVER_IP }}" >> ~/.ssh/known_hosts
 
       - name: Copy files to remote server
