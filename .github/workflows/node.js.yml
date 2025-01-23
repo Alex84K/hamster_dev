@@ -44,8 +44,8 @@ jobs:
         with:
           name: deployment-files
           path: |
-            hamster_dev.tar  # Явно указываем путь к файлу
-            docker-compose.yml  # Убедитесь, что файл находится в корне репозитория
+            ./hamster_dev.tar  # Явно указываем путь к файлу
+            ./docker-compose.yml  # Убедитесь, что файл находится в корне репозитория
 
   deploy:
     runs-on: ubuntu-latest
