@@ -1,0 +1,7 @@
+services:
+  frontend:
+    image: hamster_dev:latest
+    container_name: hamster_dev
+    ports:
+      - "3003:3003"
+    command: "nginx -g 'daemon off;'"
