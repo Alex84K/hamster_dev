@@ -82,10 +82,6 @@ jobs:
       - name: Create deploy directory on remote server
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S mkdir -p $DEPLOY_DIR &&
-            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S chown ${{ secrets.SERVER_USER }}:${{ secrets.SERVER_USER }} $DEPLOY_DIR &&
-            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S chmod 777 $DEPLOY_DIR
-          "
 
       - name: Check for required files
         run: |
@@ -106,8 +102,4 @@ jobs:
       - name: Deploy Docker image on remote server
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
-            cd $DEPLOY_DIR &&
-            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S docker load -i $DOCKER_IMAGE.tar &&
-            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S docker compose down &&
-            echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S docker compose up -d
-          "
+            cd $DEPLOY_DIR 
