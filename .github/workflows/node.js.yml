@@ -72,7 +72,7 @@ jobs:
         run: |
           ls -la
 
-      - name: Set up SSH
+      - name: Set up SSH1
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github_ci_cd_key
