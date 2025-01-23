@@ -50,10 +50,6 @@ jobs:
           docker save $DOCKER_IMAGE -o $DOCKER_IMAGE.tar
           ls -lh
 
-      - name: List files before upload
-        run: |
-          ls -lh
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -74,7 +70,7 @@ jobs:
 
       - name: List downloaded files
         run: |
-          ls -lh
+          ls -la
 
       - name: Set up SSH
         run: |
@@ -86,7 +82,7 @@ jobs:
       - name: Copy files to remote server
         run: |
           scp -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key $DOCKER_IMAGE.tar root@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key docker-compose.yml root@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/github_ci_cd_key ./docker-compose.yml root@${{ secrets.SERVER_IP }}:$DEPLOY_DIR
 
       - name: Deploy Docker image on remote server
         run: |
