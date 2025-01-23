@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  DOCKER_IMAGE: "amortisationsrechner"
+  DOCKER_IMAGE: "hamster_dev"
   DEPLOY_DIR: "/root/deploy/"  # Убедитесь, что путь корректен
   CONTAINER_NAME: "hamster_dev"
   HOST_PORT: "3003"
