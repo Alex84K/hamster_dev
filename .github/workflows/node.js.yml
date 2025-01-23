@@ -8,10 +8,10 @@ on:
 
 env:
   DOCKER_IMAGE: "amortisationsrechner"
-  DEPLOY_DIR: "/alex/deploy_amortisationsrechner/"  # Убедитесь, что путь корректен
-  CONTAINER_NAME: "amortisationsrechner"
-  HOST_PORT: "3000"
-  CONTAINER_PORT: "3000"
+  DEPLOY_DIR: "/root/deploy/"  # Убедитесь, что путь корректен
+  CONTAINER_NAME: "hamster_dev"
+  HOST_PORT: "3003"
+  CONTAINER_PORT: "3003"
 
 jobs:
   build:
